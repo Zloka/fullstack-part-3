@@ -71,6 +71,13 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
+  const existingPerson = persons.find(person => person.name.toLowerCase() === name.toLowerCase());
+  if (existingPerson) {
+    return response.status(400).json({ 
+      error: `${existingPerson.name} already exists in the phonebook!`
+    })
+  }
+
   const person = {
     name,
     number,
