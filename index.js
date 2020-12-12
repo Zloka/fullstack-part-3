@@ -64,16 +64,16 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
   const { body } = request;
-  if (!body.content) {
+  const { name, number } = body;
+  if (!name || !number) {
     return response.status(400).json({ 
-      error: 'content missing' 
+      error: 'The name and/or number is missing!' 
     })
   }
 
   const person = {
-    content: body.content,
-    important: body.important || false,
-    date: new Date(),
+    name,
+    number,
     id: generateId(),
   }
 
