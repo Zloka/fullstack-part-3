@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require('mongoose-unique-validator')
 
-const url = process.env.MONGODB_URI;
+const url = process.env.MONGODB_URI
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true }).catch(error => console.log(error))
 const PhoneBookEntrySchema = new mongoose.Schema({
@@ -17,6 +17,6 @@ PhoneBookEntrySchema.set('toJSON', {
   }
 })
 
-PhoneBookEntrySchema.plugin(uniqueValidator);
+PhoneBookEntrySchema.plugin(uniqueValidator)
 
 module.exports = mongoose.model('PhoneBookEntry', PhoneBookEntrySchema)
