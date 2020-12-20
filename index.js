@@ -39,7 +39,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-  response.send(`<div>Phonebook has info for ${persons.length} people</div><br><div>${new Date()}</div>`)
+  PhoneBookEntry.find({}).then(result => {
+    response.send(`<div>Phonebook has info for ${result.length} people</div><br><div>${new Date()}</div>`)
+  })
 })
 
 app.get('/api/persons', (request, response) => {
