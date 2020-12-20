@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan');
 const cors = require('cors');
+const PhoneBookEntry = require('./models/phonebookEntry')
 
 app.use(express.json());
 app.use(cors())
@@ -42,18 +43,20 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  PhoneBookEntry.find({}).then(result => {
+    response.json(result);
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find(person => person.id === id)
-  
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  PhoneBookEntry.findById(request.params.id)
+  .then(entry => {
+    if (entry) {
+      response.json(entry)
+    } else {
+      response.status(404).end() 
+    }
+  })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -102,7 +105,6 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
-
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
