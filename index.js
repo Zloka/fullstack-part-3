@@ -50,7 +50,7 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   PhoneBookEntry.findById(request.params.id)
   .then(entry => {
     if (entry) {
@@ -85,7 +85,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const { body } = request;
   const { name, number } = body;
   if (!name || !number) {
@@ -101,7 +101,7 @@ app.post('/api/persons', (request, response) => {
 
   phoneBookEntry.save().then(savedPerson => {
     response.json(savedPerson)
-  });
+  }).catch(error => next(error));
 })
 
 const unknownEndpoint = (request, response) => {
@@ -115,7 +115,11 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  }
+
+  if (error.name === 'ValidationError') {
+    return response.status(400).send({ error: 'duplicate name' })
+  }
 
   next(error)
 }
